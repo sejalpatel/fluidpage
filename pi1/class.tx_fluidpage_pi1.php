@@ -106,12 +106,25 @@ class tx_fluidpage_pi1 extends tslib_pibase {
 		$view = $this->constructView($templateFile);
 		$this->assignTyposcriptVariables($view);
 		
+		// get layout constants
+		$constants = $this->conf['templates.'][$layoutUID.'.']['constants.'];
+		if(!is_array($constants)) $constants = array();
+
+		// get global constants
+		$gConstants = $this->conf['constants.'];
+		if(!is_array($gConstants)) $gConstants = array();
+
+		$constants = array_merge($gConstants,$constants);
+		
 		// fluidpage variable assignment
-		$view->assign('data', $this->cObj->data);
+		$view->assign('data', $this->cObj->data); // legacy; remove it at some point.
+		$view->assign('page', $this->cObj->data);
 		$view->assign('current', $this->cObj->data[$this->cObj->currentValKey]);
 		$view->assign('layout', $layoutUID);
 		$view->assign('layoutClass', $this->getLayoutClassName());
-
+		$view->assign('constants',$constants);
+		$view->assign('constants',$constants);
+		
 		// render the view and assign output to $this->content;
 		$this->setContent($view->render());
 
